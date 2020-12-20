@@ -5,6 +5,7 @@ module.exports = {
   },
   compressor: {
     localPath: '/echoes',
+    allowDelete: process.env.ALLOW_DELETE,
   },
   routes: {
     admin: {
