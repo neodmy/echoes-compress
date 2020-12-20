@@ -7,6 +7,7 @@ describe('Service Tests', () => {
 
   beforeEach(async () => {
     sys = sys.remove('cron');
+    sys = sys.remove('task');
     const { app } = await sys.start();
     request = supertest(app);
   });

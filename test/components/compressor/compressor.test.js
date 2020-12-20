@@ -17,6 +17,7 @@ describe('Compressor component tests', () => {
 
   beforeAll(async () => {
     sys = sys.remove('cron');
+    sys = sys.remove('task');
     ({ compressor, archiver } = await sys.start());
     compressFileSpy = jest.spyOn(archiver, 'compressFile');
     deleteFileSpy = jest.spyOn(archiver, 'deleteFile');
