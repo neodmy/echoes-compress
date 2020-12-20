@@ -3,9 +3,10 @@ const system = require('../system');
 
 describe('Service Tests', () => {
   let request;
-  const sys = system();
+  let sys = system();
 
   beforeEach(async () => {
+    sys = sys.remove('cron');
     const { app } = await sys.start();
     request = supertest(app);
   });

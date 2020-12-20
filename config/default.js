@@ -7,6 +7,9 @@ module.exports = {
     localPath: '/echoes',
     allowDelete: process.env.ALLOW_DELETE,
   },
+  cron: {
+    schedule: process.env.CRON_SCHEDULE,
+  },
   routes: {
     admin: {
       swaggerOptions: {

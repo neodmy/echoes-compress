@@ -8,7 +8,7 @@ const {
 } = require('../../../config/test');
 
 describe('Compressor component tests', () => {
-  const sys = system();
+  let sys = system();
   let compressor;
   let archiver;
 
@@ -16,6 +16,7 @@ describe('Compressor component tests', () => {
   let deleteFileSpy;
 
   beforeAll(async () => {
+    sys = sys.remove('cron');
     ({ compressor, archiver } = await sys.start());
     compressFileSpy = jest.spyOn(archiver, 'compressFile');
     deleteFileSpy = jest.spyOn(archiver, 'deleteFile');
