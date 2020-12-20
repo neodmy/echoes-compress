@@ -3,10 +3,11 @@ const path = require('path');
 const system = require('../../../system');
 
 describe('Archiver component tests', () => {
-  const sys = system();
+  let sys = system();
   let archiver;
 
   beforeAll(async () => {
+    sys = sys.remove('cron');
     ({ archiver } = await sys.start());
   });
 
