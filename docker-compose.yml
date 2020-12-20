@@ -1,11 +1,11 @@
 version: "3.5"
 
 services:
-  echoes-backup-client:
+  echoes-compress:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name:  echoes-backup-client
+    container_name:  echoes-compress
     environment:
       # CRON
       CRON_SCHEDULE: '0 0 8 * * *'
