@@ -9,6 +9,8 @@ services:
     environment:
       # CRON
       CRON_SCHEDULE: '0 0 8 * * *'
+      # COMPRESSOR
+      ALLOW_DELETE: 'active'
     ports:
       - "4001:4000"
     volumes:
