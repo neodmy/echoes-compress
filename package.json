@@ -48,6 +48,7 @@
     "bunyan": "^1.8.12",
     "chalk": "^3.0.0",
     "confabulous": "^1.7.0",
+    "cron": "^1.8.2",
     "cross-env": "^7.0.3",
     "debug": "^4.1.1",
     "express-swagger-generator": "^1.1.15",
