@@ -3,12 +3,13 @@ module.exports = {
     host: '0.0.0.0',
     port: 4000,
   },
-  compressor: {
-    localPath: '/echoes',
-    allowDelete: process.env.ALLOW_DELETE,
-  },
   cron: {
     schedule: process.env.CRON_SCHEDULE,
+  },
+  controller: {
+    opendataPath: '/opendata',
+    localPath: '/echoes',
+    deleteOffset: process.env.DELETE_OFFSET || 15,
   },
   routes: {
     admin: {
