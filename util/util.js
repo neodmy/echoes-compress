@@ -12,7 +12,16 @@ const getPreviousDay = () => {
   return dateToProcess.toISOString().split('T')[0];
 };
 
+const shouldRemove = (filename, removalOffset) => {
+  if (!removalOffset) return false;
+  const removalDate = new Date();
+  removalDate.setDate(removalDate.getDate() - removalOffset);
+  const fileDate = new Date(filename);
+  return removalDate > fileDate;
+};
+
 module.exports = {
   asyncForEach,
   getPreviousDay,
+  shouldRemove,
 };
