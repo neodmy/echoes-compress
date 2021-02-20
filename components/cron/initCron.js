@@ -1,17 +1,14 @@
 const { CronJob } = require('cron');
 
-const { getPreviousDay } = require('../../util/util');
-
 module.exports = () => {
   let initDailyJob;
-  const start = async ({ config, compressor }) => {
+  const start = async ({ config, controller, logger }) => {
     const { schedule } = config;
     initDailyJob = new CronJob(schedule, async () => {
-      const filename = getPreviousDay();
-      await compressor.handleCompression(filename);
+      await controller.handleBatchProcess();
     });
-
-    return initDailyJob;
+    logger.info(`Setting cronjob with expression ${schedule}`);
+    initDailyJob.start();
   };
 
   const stop = async () => {
