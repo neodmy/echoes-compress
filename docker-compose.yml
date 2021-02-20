@@ -9,9 +9,10 @@ services:
     environment:
       # CRON
       CRON_SCHEDULE: '0 0 8 * * *'
-      # COMPRESSOR
-      ALLOW_DELETE: 'active'
+      # DELETE
+      DELETE_OFFSET: 10
     ports:
       - "4001:4000"
     volumes:
       - /path/to/source/dir:/echoes
+      - /path/to/opendata:/opendata
