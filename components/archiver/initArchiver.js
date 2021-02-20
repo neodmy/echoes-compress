@@ -69,10 +69,13 @@ module.exports = () => {
       });
     });
 
+    const checkFileExists = filePath => fs.pathExistsSync(filePath);
+
     return {
       compressFile,
       deleteFile,
       getDirectoryContent,
+      checkFileExists,
     };
   };
 
