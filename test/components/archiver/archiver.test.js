@@ -8,7 +8,6 @@ describe('Archiver component tests', () => {
 
   beforeAll(async () => {
     sys = sys.remove('cron');
-    sys = sys.remove('task');
     ({ archiver } = await sys.start());
   });
 
