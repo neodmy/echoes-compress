@@ -3,7 +3,12 @@ const { CronJob } = require('cron');
 module.exports = () => {
   let initDailyJob;
   const start = async ({ config, controller, logger }) => {
-    const { schedule } = config;
+    const { schedule, initialSync } = config;
+
+    if (initialSync === 'active') {
+      await controller.handleBatchProcess();
+    }
+
     initDailyJob = new CronJob(schedule, async () => {
       await controller.handleBatchProcess();
     });

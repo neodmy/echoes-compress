@@ -9,6 +9,7 @@ services:
     environment:
       # CRON
       CRON_SCHEDULE: '0 0 8 * * *'
+      INITIAL_SYNC: 'active'
       # DELETE
       DELETE_OFFSET: 10
     ports:

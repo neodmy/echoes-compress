@@ -5,6 +5,7 @@ module.exports = {
   },
   cron: {
     schedule: process.env.CRON_SCHEDULE,
+    initialSync: process.env.INITAL_SYNC,
   },
   controller: {
     opendataPath: '/opendata',
