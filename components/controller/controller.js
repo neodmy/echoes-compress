@@ -37,7 +37,7 @@ module.exports = () => {
           logger.info(`File has been deleted | Filename ${filename}`);
           return;
         }
-        logger.info(`File is not older than offset. Skipping deletion | Filename ${filename}`);
+        logger.info(`File does not fullfil requirements for deletion. Older ${isFileToRemove}, Opendata ${existsOpendata}, Zip ${existsZip} | Filename ${filename}`);
       } catch (error) {
         logger.error(`Error deleting file | Filename ${filename} | Error ${error}`);
       }
