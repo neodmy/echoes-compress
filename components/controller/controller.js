@@ -64,7 +64,7 @@ module.exports = () => {
           }
           await handleDeletion(filename);
         } else {
-          logger.warn(`File does not fullfil requirements for batch process. Faile to process ${isFileToProcess}, Opendata ${opendataPath} | Filename ${filename}`);
+          logger.warn(`File does not fullfil requirements for batch process. File to process ${isFileToProcess}, Opendata ${existsOpendata} | Filename ${filename}`);
         }
       };
       await asyncForEach(files, handleFile);
