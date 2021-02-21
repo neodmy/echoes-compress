@@ -22,7 +22,13 @@ describe('Controller component tests', () => {
     deleteFileSpy = jest.spyOn(archiver, 'deleteFile');
   });
 
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => {
+    fs.removeSync(localPath);
+    fs.removeSync(opendataPath);
+    fs.ensureDirSync(localPath);
+    fs.ensureDirSync(opendataPath);
+    jest.clearAllMocks();
+  });
 
   afterAll(() => sys.stop());
 
@@ -63,9 +69,6 @@ describe('Controller component tests', () => {
         expect(err).toBeUndefined();
 
         expect(compressFileSpy).toHaveBeenCalledWith(path.join(localPath, filename));
-
-        fs.removeSync(originalBackup);
-        fs.removeSync(`${originalBackup}.zip`);
       }
     });
   });
@@ -104,7 +107,9 @@ describe('Controller component tests', () => {
     test('should skip the deletion when the file is older than the offset and the opendata folder exists but the compressed file was not generated', async () => {
       const filename = generateFile(true);
 
+      const originalBackup = `${localPath}/${filename}`;
       const opendataFolder = `${opendataPath}/${filename}`;
+      fs.ensureDirSync(originalBackup);
       fs.ensureDirSync(opendataFolder);
 
       let err;
@@ -116,8 +121,6 @@ describe('Controller component tests', () => {
         expect(err).toBeUndefined();
 
         expect(deleteFileSpy).not.toHaveBeenCalled();
-
-        fs.rmdirSync(opendataFolder);
       }
     });
 
@@ -140,10 +143,6 @@ describe('Controller component tests', () => {
         expect(err).toBeUndefined();
 
         expect(deleteFileSpy).toHaveBeenCalledWith(originalBackup);
-
-        fs.remove(originalBackup);
-        fs.remove(compressedFile);
-        fs.remove(opendataFolder);
       }
     });
   });
@@ -164,8 +163,6 @@ describe('Controller component tests', () => {
 
         expect(compressFileSpy).not.toHaveBeenCalled();
         expect(deleteFileSpy).not.toHaveBeenCalled();
-
-        fs.remove(otherFile);
       }
     });
 
@@ -182,10 +179,28 @@ describe('Controller component tests', () => {
       } finally {
         expect(err).toBeUndefined();
 
-        expect(archiver.compressFile).not.toHaveBeenCalled();
+        expect(compressFileSpy).not.toHaveBeenCalled();
         expect(deleteFileSpy).not.toHaveBeenCalled();
+      }
+    });
 
-        fs.remove(originalBackup);
+    test('should skip the compression of a file that has already been compressed', async () => {
+      const filename = generateFile(true);
+      const originalBackup = `${localPath}/${filename}`;
+      const originalBackupCompressed = `${localPath}/${filename}.zip`;
+      fs.ensureDirSync(originalBackup);
+      fs.ensureFileSync(originalBackupCompressed);
+
+      let err;
+      try {
+        await controller.handleBatchProcess();
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).toBeUndefined();
+
+        expect(compressFileSpy).not.toHaveBeenCalled();
+        expect(deleteFileSpy).not.toHaveBeenCalled();
       }
     });
 
@@ -193,7 +208,7 @@ describe('Controller component tests', () => {
       const filename = generateFile(false);
 
       const originalBackup = `${localPath}/${filename}`;
-      fs.ensureDir(originalBackup);
+      fs.ensureDirSync(originalBackup);
 
       let err;
       try {
@@ -206,9 +221,6 @@ describe('Controller component tests', () => {
         expect(compressFileSpy).toHaveBeenCalledWith(originalBackup);
         expect(compressFileSpy).toHaveBeenCalledTimes(1);
         expect(deleteFileSpy).not.toHaveBeenCalled();
-
-        fs.remove(originalBackup);
-        fs.remove(`${originalBackup}.zip`);
       }
     });
   });

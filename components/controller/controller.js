@@ -44,12 +44,18 @@ module.exports = () => {
     };
 
     const handleBatchProcess = async () => {
+      logger.info('Daily batch process has started');
       const files = await archiver.getDirectoryContent(localPath);
 
       const handleFile = async filename => {
+        const alreadyCompressed = files.includes(`${filename}.zip`);
         const isFileToProcess = /^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/.test(filename);
         if (isFileToProcess) {
-          await handleCompression(filename);
+          if (!alreadyCompressed) {
+            await handleCompression(filename);
+          } else {
+            logger.info(`Skipping compression during batch process. File is already compressed | Filename ${filename}`);
+          }
           await handleDeletion(filename);
         }
       };
