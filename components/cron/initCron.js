@@ -6,6 +6,7 @@ module.exports = () => {
     const { schedule, initialSync } = config;
 
     if (initialSync === 'active') {
+      logger.info('Initial sync is active');
       await controller.handleBatchProcess();
     }
 
