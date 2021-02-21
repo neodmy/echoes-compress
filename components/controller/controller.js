@@ -48,15 +48,23 @@ module.exports = () => {
       const files = await archiver.getDirectoryContent(localPath);
 
       const handleFile = async filename => {
-        const alreadyCompressed = files.includes(`${filename}.zip`);
+        const opendataFilePath = path.join(opendataPath, filename);
+        const compressedFile = path.join(localPath, `${filename}.zip`);
+
         const isFileToProcess = /^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/.test(filename);
-        if (isFileToProcess) {
+
+        const alreadyCompressed = archiver.checkFileExists(compressedFile);
+        const existsOpendata = archiver.checkFileExists(opendataFilePath);
+
+        if (isFileToProcess && existsOpendata) {
           if (!alreadyCompressed) {
             await handleCompression(filename);
           } else {
             logger.info(`Skipping compression during batch process. File is already compressed | Filename ${filename}`);
           }
           await handleDeletion(filename);
+        } else {
+          logger.warn(`File does not fullfil requirements for batch process. Faile to process ${isFileToProcess}, Opendata ${opendataPath} | Filename ${filename}`);
         }
       };
       await asyncForEach(files, handleFile);

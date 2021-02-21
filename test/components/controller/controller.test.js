@@ -184,12 +184,10 @@ describe('Controller component tests', () => {
       }
     });
 
-    test('should skip the compression of a file that has already been compressed', async () => {
+    test('should skip a file that has not opendata counterpart', async () => {
       const filename = generateFile(true);
       const originalBackup = `${localPath}/${filename}`;
-      const originalBackupCompressed = `${localPath}/${filename}.zip`;
       fs.ensureDirSync(originalBackup);
-      fs.ensureFileSync(originalBackupCompressed);
 
       let err;
       try {
@@ -204,11 +202,35 @@ describe('Controller component tests', () => {
       }
     });
 
-    test('should compress the file but not delete it according to the delete conditions', async () => {
-      const filename = generateFile(false);
-
+    test('should skip the compression of a file that has already been compressed', async () => {
+      const filename = generateFile(true);
       const originalBackup = `${localPath}/${filename}`;
+      const originalBackupCompressed = `${localPath}/${filename}.zip`;
+      const opendataFile = `${opendataPath}/${filename}`;
+
       fs.ensureDirSync(originalBackup);
+      fs.ensureDirSync(opendataFile);
+      fs.ensureFileSync(originalBackupCompressed);
+
+      let err;
+      try {
+        await controller.handleBatchProcess();
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).toBeUndefined();
+
+        expect(compressFileSpy).not.toHaveBeenCalled();
+      }
+    });
+
+    test('should compress a file that has not been compressed', async () => {
+      const filename = generateFile(true);
+      const originalBackup = `${localPath}/${filename}`;
+      const opendataFile = `${opendataPath}/${filename}`;
+
+      fs.ensureDirSync(originalBackup);
+      fs.ensureDirSync(opendataFile);
 
       let err;
       try {
@@ -219,8 +241,29 @@ describe('Controller component tests', () => {
         expect(err).toBeUndefined();
 
         expect(compressFileSpy).toHaveBeenCalledWith(originalBackup);
-        expect(compressFileSpy).toHaveBeenCalledTimes(1);
-        expect(deleteFileSpy).not.toHaveBeenCalled();
+      }
+    });
+
+    test('should delete a file when it matches the YYYY-mm-dd pattern and it has a opendata counterpart', async () => {
+      const filename = generateFile(true);
+
+      const originalBackup = `${localPath}/${filename}`;
+      const originalBackupCompressed = `${localPath}/${filename}.zip`;
+      const opendataFile = `${opendataPath}/${filename}`;
+
+      fs.ensureDirSync(originalBackup);
+      fs.ensureDirSync(opendataFile);
+      fs.ensureFileSync(originalBackupCompressed);
+
+      let err;
+      try {
+        await controller.handleBatchProcess();
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).toBeUndefined();
+
+        expect(deleteFileSpy).toHaveBeenCalledWith(originalBackup);
       }
     });
   });
